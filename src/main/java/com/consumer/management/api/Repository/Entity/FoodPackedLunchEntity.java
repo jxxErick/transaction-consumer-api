@@ -24,5 +24,8 @@ public class FoodPackedLunchEntity {
     @Column(name = "id_accompaniment", nullable = true)
     private Integer idAccompaniment;
 
+    @Column(name = "id_accompaniment", nullable = true)
+    private Integer idPackedLunch;
+
 
 }

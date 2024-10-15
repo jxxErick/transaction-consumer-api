@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,5 +27,5 @@ public class AccompanimentEntity {
     private String status;
 
     @Column(name = "dt_register", nullable = false)
-    private String dtRegister;
+    private Date dtRegister;
 }

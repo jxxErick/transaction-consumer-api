@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,6 +27,6 @@ public class CustomerEntity {
     private Integer name;
 
     @Column(name = "dt_register", nullable = true)
-    private Integer dtRegister;
+    private Date dtRegister;
 
 }
