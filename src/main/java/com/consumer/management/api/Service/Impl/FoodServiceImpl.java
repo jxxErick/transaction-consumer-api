@@ -5,6 +5,7 @@ import com.consumer.management.api.Model.Enum.ErrorEnum;
 import com.consumer.management.api.Model.Request.AccompanimentRequest;
 import com.consumer.management.api.Model.Request.FoodRequest;
 import com.consumer.management.api.Model.Request.MeatRequest;
+import com.consumer.management.api.Model.Request.UpdateFoodStatus;
 import com.consumer.management.api.Model.Response.AccompanimentResponse;
 import com.consumer.management.api.Model.Response.FoodResponse;
 import com.consumer.management.api.Model.Response.MeatResponse;
@@ -13,7 +14,9 @@ import com.consumer.management.api.Repository.Entity.MeatEntity;
 import com.consumer.management.api.Repository.Interface.AccompanimentRepository;
 import com.consumer.management.api.Repository.Interface.MeatRepository;
 import com.consumer.management.api.Service.Interface.FoodService;
+import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,6 +28,10 @@ public class FoodServiceImpl implements FoodService {
     private final AccompanimentRepository accompanimentRepository;
     private final MeatRepository meatRepository;
 
+    private final String NO_STOCK = "OUT_OF_STOCK";
+    private final String STOCK = "STOCK";
+
+    @Autowired
     public FoodServiceImpl(AccompanimentRepository accompanimentRepository, MeatRepository meatRepository) {
         this.accompanimentRepository = accompanimentRepository;
         this.meatRepository = meatRepository;
@@ -51,6 +58,31 @@ public class FoodServiceImpl implements FoodService {
                    ErrorEnum.ERROR_INSERT_FOOD_OF_DAY.getTituloMessage(),
                    ErrorEnum.ERROR_INSERT_FOOD_OF_DAY.getErrorMessage());
        }
+    }
+
+    @Override
+    @Transactional
+    public boolean updateFoodOfDay(UpdateFoodStatus update) {
+        try{
+            if(update.isAccompaniment()){
+                accompanimentRepository.updateStatusAccompaniment(update.isStock() ? STOCK : NO_STOCK, update.getId());
+            }
+
+            if(update.isMeat()){
+                meatRepository.updateStatusMeat(update.isStock() ? STOCK : NO_STOCK, update.getId());
+            }
+            return true;
+        } catch (Exception ex) {
+            throw new ConsumerException(ex, ErrorEnum.ERROR_UPDATE_STATUS_FOOD.getHttpStatus(),
+                    ErrorEnum.ERROR_UPDATE_STATUS_FOOD.getErrorCode(),
+                    ErrorEnum.ERROR_UPDATE_STATUS_FOOD.getTituloMessage(),
+                    ErrorEnum.ERROR_UPDATE_STATUS_FOOD.getErrorMessage());
+        }
+    }
+
+    @Override
+    public FoodResponse getFoodOfDay(boolean stock) {
+        return null;
     }
 
     private FoodResponse mapListFoodResponse(List<MeatEntity> entitiesMeat, List<AccompanimentEntity> entitiesAccompaniment) {

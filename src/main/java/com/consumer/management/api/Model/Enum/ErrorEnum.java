@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum ErrorEnum {
     ERROR_INSERT_FOOD_OF_DAY(1, "001.001", "Erro ao inserir comidas", "Ocorreu um erro ao inserir comidas do dia", HttpStatus.BAD_REQUEST),
+    ERROR_UPDATE_STATUS_FOOD(2, "001.002", "Erro ao editar comidas", "Ocorreu um erro ao editar comidas do dia", HttpStatus.BAD_REQUEST),
 
     ;
 
