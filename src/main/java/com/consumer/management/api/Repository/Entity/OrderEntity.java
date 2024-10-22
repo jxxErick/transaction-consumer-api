@@ -24,5 +24,8 @@ public class OrderEntity {
     @Column(name = "total", nullable = false)
     private BigDecimal total;
 
+    @Column(name = "status", nullable = false)
+    private String status;
+
 
 }
