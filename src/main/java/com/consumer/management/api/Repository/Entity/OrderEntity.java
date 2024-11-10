@@ -27,5 +27,8 @@ public class OrderEntity {
     @Column(name = "status", nullable = false)
     private String status;
 
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private CustomerEntity customer;
+
 
 }

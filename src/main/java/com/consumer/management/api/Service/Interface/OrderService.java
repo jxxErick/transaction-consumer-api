@@ -1,5 +1,8 @@
 package com.consumer.management.api.Service.Interface;
 
-public interface OrderService {
+import com.consumer.management.api.Model.Request.CreateOrderRequest;
+import com.consumer.management.api.Model.Response.CreateOrderResponse;
 
+public interface OrderService {
+    CreateOrderResponse createOrder(CreateOrderRequest request);
 }

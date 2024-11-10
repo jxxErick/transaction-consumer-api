@@ -12,7 +12,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,11 +50,24 @@ public class PackedLunchServiceImpl implements PackedLunchService {
         try{
             List<PackedLunchWeightEntity> entity = (List<PackedLunchWeightEntity>) packedLunchWeightRepository.findAll();
             return mapListEntityToResponse(entity);
-        } catch (Exception e) {
-            throw new ConsumerException(e, ErrorEnum.ERROR_CREATE_PACKED_LUNCH_WEIGHT.getHttpStatus(),
-                    ErrorEnum.ERROR_CREATE_PACKED_LUNCH_WEIGHT.getErrorCode(),
-                    ErrorEnum.ERROR_CREATE_PACKED_LUNCH_WEIGHT.getTituloMessage(),
-                    ErrorEnum.ERROR_CREATE_PACKED_LUNCH_WEIGHT.getErrorMessage());
+        } catch (Exception ex) {
+            throw new ConsumerException(ex, ErrorEnum.ERROR_FIND_WEIGHTS.getHttpStatus(),
+                    ErrorEnum.ERROR_FIND_WEIGHTS.getErrorCode(),
+                    ErrorEnum.ERROR_FIND_WEIGHTS.getTituloMessage(),
+                    ErrorEnum.ERROR_FIND_WEIGHTS.getErrorMessage());
+        }
+    }
+
+    @Override
+    public PackedLunchWeightResponse listWeightsByName(String name) {
+        try{
+            PackedLunchWeightEntity entity = packedLunchWeightRepository.findByName(name);
+            return mapEntityToResponse(entity);
+        } catch (Exception ex){
+            throw new ConsumerException(ex, ErrorEnum.ERROR_FIND_WEIGHTS.getHttpStatus(),
+                    ErrorEnum.ERROR_FIND_WEIGHTS.getErrorCode(),
+                    ErrorEnum.ERROR_FIND_WEIGHTS.getTituloMessage(),
+                    ErrorEnum.ERROR_FIND_WEIGHTS.getErrorMessage());
         }
     }
 

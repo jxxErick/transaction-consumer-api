@@ -24,8 +24,9 @@ public class FoodPackedLunchEntity {
     @Column(name = "id_accompaniment", nullable = true)
     private Integer idAccompaniment;
 
-    @Column(name = "id_packed_lunch", nullable = true)
-    private Integer idPackedLunch;
+    @ManyToOne
+    @JoinColumn(name = "id_packed_lunch", referencedColumnName = "id")
+    private PackedLunchEntity packedLunchEntity;
 
 
 }

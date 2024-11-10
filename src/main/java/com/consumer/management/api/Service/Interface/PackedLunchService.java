@@ -9,4 +9,5 @@ public interface PackedLunchService {
     PackedLunchWeightResponse getPackedLunchWeight(String name);
     PackedLunchWeightResponse createPackedLunchWeight(PackedLunchWeightRequest request);
     List<PackedLunchWeightResponse> listPackedLunchWeights();
+    PackedLunchWeightResponse listWeightsByName(String name);
 }
