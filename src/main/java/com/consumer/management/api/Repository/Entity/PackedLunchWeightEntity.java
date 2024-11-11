@@ -13,17 +13,17 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "tbl_packed_lunch")
+@Table(name = "tbl_packed_lunch_weight")
 public class PackedLunchWeightEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "quantityAccompaniment", nullable = false)
+    @Column(name = "quantity_accompaniment", nullable = false)
     private int quantityAccompaniment;
 
-    @Column(name = "quantityMeat", nullable = false)
+    @Column(name = "quantity_meat", nullable = false)
     private int quantityMeat;
 
     @Column(name = "weight", nullable = false)

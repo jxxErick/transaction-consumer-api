@@ -20,11 +20,12 @@ public class CustomerEntity {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "id_order", nullable = true)
-    private Integer idOrder;
+    @OneToOne
+    @JoinColumn(name = "id_order", referencedColumnName = "id")
+    private OrderEntity order;
 
     @Column(name = "name", nullable = true)
-    private Integer name;
+    private String name;
 
     @Column(name = "dt_register", nullable = true)
     private Date dtRegister;

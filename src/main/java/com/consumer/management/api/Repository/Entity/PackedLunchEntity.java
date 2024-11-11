@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,5 +25,8 @@ public class PackedLunchEntity {
 
     @Column(name = "id_order", nullable = false)
     private Integer order;
+
+    @OneToMany(mappedBy = "packedLunchEntity", cascade = CascadeType.ALL)
+    private List<FoodPackedLunchEntity> foodPackedLunchEntity;
 
 }

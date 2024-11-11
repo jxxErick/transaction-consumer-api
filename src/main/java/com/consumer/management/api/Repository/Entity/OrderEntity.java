@@ -24,5 +24,11 @@ public class OrderEntity {
     @Column(name = "total", nullable = false)
     private BigDecimal total;
 
+    @Column(name = "status", nullable = false)
+    private String status;
+
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private CustomerEntity customer;
+
 
 }
