@@ -5,12 +5,14 @@ import com.consumer.management.api.Model.Enum.ErrorEnum;
 import com.consumer.management.api.Model.Request.CreateOrderRequest;
 import com.consumer.management.api.Model.Request.PackedLunchRequest;
 import com.consumer.management.api.Model.Response.CreateOrderResponse;
+import com.consumer.management.api.Model.Response.ItemsResponse;
 import com.consumer.management.api.Model.Response.PackedLunchResponse;
 import com.consumer.management.api.Model.Response.PackedLunchWeightResponse;
 import com.consumer.management.api.Repository.Entity.CustomerEntity;
 import com.consumer.management.api.Repository.Entity.FoodPackedLunchEntity;
 import com.consumer.management.api.Repository.Entity.OrderEntity;
 import com.consumer.management.api.Repository.Entity.PackedLunchEntity;
+import com.consumer.management.api.Repository.Interface.FoodPackedLunchRepository;
 import com.consumer.management.api.Repository.Interface.OrderRepository;
 import com.consumer.management.api.Repository.Interface.PackedLunchRepository;
 import com.consumer.management.api.Service.Interface.OrderService;
@@ -20,10 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 @Service
 @Log4j2
@@ -33,6 +34,9 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final PackedLunchRepository packedLunchRepository;
     private static final String PENDING = "PENDING";
+
+    @Autowired
+    private FoodPackedLunchRepository foodPackedLunchRepository;
 
     @Autowired
     public OrderServiceImpl(PackedLunchService packedLunchService, OrderRepository orderRepository, PackedLunchRepository packedLunchRepository) {
@@ -72,6 +76,47 @@ public class OrderServiceImpl implements OrderService {
                     ErrorEnum.ERROR_CREATE_ORDER.getErrorMessage());
         }
     }
+
+    @Override
+    public List<ItemsResponse> getItemsByOrderId(int orderId) {
+        List<Object[]> results;
+        if(orderId == 0){
+            results = new ArrayList<>();
+            List<OrderEntity> pendingOrders = orderRepository.findStatusPending();
+            pendingOrders.forEach(
+                    order -> {
+                        List<Object[]> resultsOrder = foodPackedLunchRepository.findItemsByOrderId(order.getId());
+                        results.addAll(resultsOrder);
+                    }
+            );
+        } else{
+            results = foodPackedLunchRepository.findItemsByOrderId(orderId);
+        }
+        Map<Integer, ItemsResponse> packedLunchMap = new HashMap<>();
+
+        for (Object[] row : results) {
+            String accompaniment = (String) row[0];
+            String meat = (String) row[1];
+            Integer packedLunchId = (Integer) row[2];
+
+            ItemsResponse itemsResponse = packedLunchMap.computeIfAbsent(packedLunchId, id ->
+                    ItemsResponse.builder()
+                            .packedLunchId(packedLunchId)
+                            .foods(new ArrayList<>())
+                            .build()
+            );
+
+            if (accompaniment != null) {
+                itemsResponse.getFoods().add(accompaniment);
+            }
+            if (meat != null) {
+                itemsResponse.getFoods().add(meat);
+            }
+        }
+
+        return new ArrayList<>(packedLunchMap.values());
+    }
+
 
     private CreateOrderResponse mapOrderResponse(AtomicReference<BigDecimal> total, Integer id, List<PackedLunchRequest> errors) {
         CreateOrderResponse resp = new CreateOrderResponse();
